@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strimzi-topic-operator
+  labels:
+    app: strimzi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: strimzi-topic-operator
+  template:
+    metadata:
+      labels:
+        name: strimzi-topic-operator
+    spec:
+      serviceAccountName: strimzi-topic-operator
+      volumes:
+        - name: strimzi-tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 5Mi
+        - name: cacerts-vol 
+          configMap:
+            name: cacerts
+      containers:
+        - name: strimzi-topic-operator
+          image: blah-blah/strimzi-operator-msk-iam:latest
+          args:
+            - /opt/strimzi/bin/topic_operator_run.sh
+          volumeMounts:
+            - name: strimzi-tmp
+              mountPath: /tmp
+            - name: cacerts-vol
+              mountPath: /opt/cacerts
+              subPath: cacerts
+              readOnly: true
+          env:
+            - name: STRIMZI_SASL_ENABLED
+              value: "true"
+            - name: STRIMZI_SECURITY_PROTOCOL 
+              value: SASL_SSL
+            - name: STRIMZI_SASL_MECHANISM
+              value: custom
+            - name: SASL_CUSTOM_CONFIG
+              value: |-
+                {
+                    "sasl.mechanism": "AWS_MSK_IAM",
+                    "sasl.jaas.config": "software.amazon.msk.auth.iam.IAMLoginModule required;",
+                    "sasl.client.callback.handler.class": "software.amazon.msk.auth.iam.IAMClientCallbackHandler"
+                }
+            - name: STRIMZI_TRUSTSTORE_LOCATION
+              value: /opt/cacerts
+            - name: STRIMZI_TRUSTSTORE_PASSWORD
+              value: changeit
+            - name: STRIMZI_KAFKA_BOOTSTRAP_SERVERS
+              value: blah-blah.kafka-serverless.us-east-1.amazonaws.com:9098
+            - name: STRIMZI_RESOURCE_LABELS
+              value: "strimzi.io/cluster=my-cluster"
+            - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
+              value: "120000"
+            - name: STRIMZI_LOG_LEVEL
+              value: DEBUG
+            - name: STRIMZI_TLS_ENABLED
+              value: "false"
+            - name: STRIMZI_JAVA_SYSTEM_PROPERTIES
+              value: "-Djavax.net.debug=verbose"
+            - name: STRIMZI_PUBLIC_CA
+              value: "true"
+            - name: STRIMZI_TLS_AUTH_ENABLED
+              value: "false"
+            - name: STRIMZI_USE_FINALIZERS
+              value: "false"
+            - name: STRIMZI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 500m
+            requests:
+              memory: 256Mi
+              cpu: 100m
+  strategy:
+    type: Recreate
