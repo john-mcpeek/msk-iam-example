@@ -25,7 +25,7 @@ spec:
             name: cacerts
       containers:
         - name: strimzi-topic-operator
-          image: blah-blah/strimzi-operator-msk-iam:latest
+          image: blah-blah/msk-iam-operator:latest
           args:
             - /opt/strimzi/bin/topic_operator_run.sh
           volumeMounts:
