@@ -45,7 +45,7 @@ spec:
             - name: STRIMZI_ALTERABLE_TOPIC_CONFIG
               value: compression.type, max.message.bytes, message.timestamp.difference.max.ms, message.timestamp.type, retention.bytes, retention.ms
             - name: STRIMZI_SASL_CUSTOM_CONFIG_JSON
-              value: |-
+              value: |
                 {
                     "sasl.mechanism": "AWS_MSK_IAM",
                     "sasl.jaas.config": "software.amazon.msk.auth.iam.IAMLoginModule required;",
