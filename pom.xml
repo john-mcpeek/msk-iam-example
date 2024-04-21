@@ -49,7 +49,7 @@
 				<configuration>
 					<images>
 						<image>
-							<name>msk-iam-operator</name>
+							<name>msk-iam-topic-operator</name>
 							<alias>dockerfile</alias>
 							<build>
 								<contextDir>${project.basedir}</contextDir>
