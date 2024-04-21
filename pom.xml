@@ -4,7 +4,7 @@
 
 	<groupId>io.volcanolabs.examples</groupId>
 	<artifactId>msk-iam-example</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>msk-iam-example</name>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>software.amazon.msk</groupId>
 			<artifactId>aws-msk-iam-auth</artifactId>
-			<version>2.0.3</version>
+			<version>2.1.0</version>
 		</dependency>
 	</dependencies>
 
@@ -42,7 +42,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>

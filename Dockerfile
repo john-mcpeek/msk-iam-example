@@ -1,9 +1,11 @@
-FROM johninjax1357/operator:latest
+FROM quay.io/strimzi/operator:latest
 
 USER root
-RUN  mkdir /opt/strimzi/external-libs
-RUN  chmod +rx /opt/strimzi/external-libs
-COPY ./target/dependencies/* /opt/strimzi/external-libs/
-ENV  JAVA_CLASSPATH=external-libs/*
-USER 1001
 
+RUN mkdir -p ${STRIMZI_HOME}/external-libs
+RUN chmod +rx ${STRIMZI_HOME}/external-libs
+
+COPY ./target/dependencies/* ${STRIMZI_HOME}/external-libs/
+ENV JAVA_CLASSPATH=${STRIMZI_HOME}/external-libs/*
+
+USER 1001
