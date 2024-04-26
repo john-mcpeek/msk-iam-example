@@ -20,9 +20,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 5Mi
-        - name: cacerts-vol 
-          configMap:
-            name: cacerts
       containers:
         - name: strimzi-topic-operator
           image: blah-blah/msk-iam-topic-operator:latest
@@ -31,10 +28,6 @@ spec:
           volumeMounts:
             - name: strimzi-tmp
               mountPath: /tmp
-            - name: cacerts-vol
-              mountPath: /opt/cacerts
-              subPath: cacerts
-              readOnly: true
           env:
             - name: STRIMZI_SASL_ENABLED
               value: "true"
@@ -52,7 +45,7 @@ spec:
                     "sasl.client.callback.handler.class": "software.amazon.msk.auth.iam.IAMClientCallbackHandler"
                 }
             - name: STRIMZI_TRUSTSTORE_LOCATION
-              value: /opt/cacerts
+              value: /usr/lib/jvm/jre-17/lib/security/cacerts
             - name: STRIMZI_TRUSTSTORE_PASSWORD
               value: changeit
             - name: STRIMZI_KAFKA_BOOTSTRAP_SERVERS
