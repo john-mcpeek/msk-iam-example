@@ -22,7 +22,7 @@ spec:
             sizeLimit: 5Mi
       containers:
         - name: strimzi-topic-operator
-          image: blah-blah/msk-iam-topic-operator:latest
+          image: johninjax1357/msk-iam-topic-operator:1.0.0
           args:
             - /opt/strimzi/bin/topic_operator_run.sh
           volumeMounts:
