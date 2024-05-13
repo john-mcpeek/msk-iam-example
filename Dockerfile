@@ -1,4 +1,4 @@
-FROM quay.io/strimzi/operator:latest
+FROM quay.io/strimzi/operator:0.41.0
 
 USER root
 
